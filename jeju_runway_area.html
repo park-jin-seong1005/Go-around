@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_08db641d94b9629a67faa42e9a513ec9 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_08db641d94b9629a67faa42e9a513ec9" ></div>
+        
+</body>
+<script>    
+    
+            var map_08db641d94b9629a67faa42e9a513ec9 = L.map(
+                "map_08db641d94b9629a67faa42e9a513ec9",
+                {
+                    center: [126.493, 33.509],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 13,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_002d2fbdfc18673aaec027ebc7db9d20 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+            var marker_43a57c1828acf42b54ae2a89765ec904 = L.marker(
+                [33.5113, 126.493],
+                {}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+            var icon_3e8dd3aeed861e8913c43a3a86c6bad7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "plane", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_43a57c1828acf42b54ae2a89765ec904.setIcon(icon_3e8dd3aeed861e8913c43a3a86c6bad7);
+        
+    
+        var popup_3a410dfe9ff9f250771ae785ff0c66f9 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_601bf2c62f864efe87b375ae382c7319 = $(`<div id="html_601bf2c62f864efe87b375ae382c7319" style="width: 100.0%; height: 100.0%;">제주국제공항</div>`)[0];
+                popup_3a410dfe9ff9f250771ae785ff0c66f9.setContent(html_601bf2c62f864efe87b375ae382c7319);
+            
+        
+
+        marker_43a57c1828acf42b54ae2a89765ec904.bindPopup(popup_3a410dfe9ff9f250771ae785ff0c66f9)
+        ;
+
+        
+    
+    
+            var polygon_5c69dcd4307c8c089ede84373e8252ea = L.polygon(
+                [[33.496545, 126.467154], [33.499765, 126.46452], [33.517193, 126.485282], [33.517944, 126.501289], [33.504276, 126.506782]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.3, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+        var popup_4f23a453ec388200e99543cc13e250f8 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_c734c0ad32ec8f0aa2c7676be5f3e6d5 = $(`<div id="html_c734c0ad32ec8f0aa2c7676be5f3e6d5" style="width: 100.0%; height: 100.0%;">정의된 활주로 영역</div>`)[0];
+                popup_4f23a453ec388200e99543cc13e250f8.setContent(html_c734c0ad32ec8f0aa2c7676be5f3e6d5);
+            
+        
+
+        polygon_5c69dcd4307c8c089ede84373e8252ea.bindPopup(popup_4f23a453ec388200e99543cc13e250f8)
+        ;
+
+        
+    
+    
+            var marker_432c5a24943a0bd0b1604ac7b451a8cc = L.marker(
+                [33.496545, 126.467154],
+                {}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+            var icon_621249a1d3ae3f7b33b2e2ffa12c4e41 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_432c5a24943a0bd0b1604ac7b451a8cc.setIcon(icon_621249a1d3ae3f7b33b2e2ffa12c4e41);
+        
+    
+        var popup_2041486cf46fbb12ff12a3cecb5ae2ba = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_a19ad3dd30f45c813a5b1be916721c01 = $(`<div id="html_a19ad3dd30f45c813a5b1be916721c01" style="width: 100.0%; height: 100.0%;">남서쪽 꼭지점: (33.496545, 126.467154)</div>`)[0];
+                popup_2041486cf46fbb12ff12a3cecb5ae2ba.setContent(html_a19ad3dd30f45c813a5b1be916721c01);
+            
+        
+
+        marker_432c5a24943a0bd0b1604ac7b451a8cc.bindPopup(popup_2041486cf46fbb12ff12a3cecb5ae2ba)
+        ;
+
+        
+    
+    
+            var marker_920b813333b8856942bfd6f265950dc4 = L.marker(
+                [33.499765, 126.46452],
+                {}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+            var icon_ce7995e73719386f5bccaa539365a43a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_920b813333b8856942bfd6f265950dc4.setIcon(icon_ce7995e73719386f5bccaa539365a43a);
+        
+    
+        var popup_f5754a06820f87e92a6a2a58122a26e6 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_c081b3db8ac2479883fbfad64e9c83b9 = $(`<div id="html_c081b3db8ac2479883fbfad64e9c83b9" style="width: 100.0%; height: 100.0%;">서쪽 꼭지점: (33.499765, 126.46452)</div>`)[0];
+                popup_f5754a06820f87e92a6a2a58122a26e6.setContent(html_c081b3db8ac2479883fbfad64e9c83b9);
+            
+        
+
+        marker_920b813333b8856942bfd6f265950dc4.bindPopup(popup_f5754a06820f87e92a6a2a58122a26e6)
+        ;
+
+        
+    
+    
+            var marker_4f3b351d4a7cca230dcdffa2192869ce = L.marker(
+                [33.517193, 126.485282],
+                {}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+            var icon_7b2bd88c498731e9e592ec167c80a2e3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_4f3b351d4a7cca230dcdffa2192869ce.setIcon(icon_7b2bd88c498731e9e592ec167c80a2e3);
+        
+    
+        var popup_75bd6b25297470726a4b5d41e82ce7db = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_784ae44254435666e0c751dc677de5c9 = $(`<div id="html_784ae44254435666e0c751dc677de5c9" style="width: 100.0%; height: 100.0%;">북서쪽 꼭지점: (33.517193, 126.485282)</div>`)[0];
+                popup_75bd6b25297470726a4b5d41e82ce7db.setContent(html_784ae44254435666e0c751dc677de5c9);
+            
+        
+
+        marker_4f3b351d4a7cca230dcdffa2192869ce.bindPopup(popup_75bd6b25297470726a4b5d41e82ce7db)
+        ;
+
+        
+    
+    
+            var marker_2c1a2106ef60973d6f07c384afbefa30 = L.marker(
+                [33.517944, 126.501289],
+                {}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+            var icon_c21a0926d07db376cd42509f1394614c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_2c1a2106ef60973d6f07c384afbefa30.setIcon(icon_c21a0926d07db376cd42509f1394614c);
+        
+    
+        var popup_313b4abd209d7bdd27e40adcb5e587d0 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_01ae41818514c1379e719d7c87a0f04e = $(`<div id="html_01ae41818514c1379e719d7c87a0f04e" style="width: 100.0%; height: 100.0%;">북동쪽 꼭지점: (33.517944, 126.501289)</div>`)[0];
+                popup_313b4abd209d7bdd27e40adcb5e587d0.setContent(html_01ae41818514c1379e719d7c87a0f04e);
+            
+        
+
+        marker_2c1a2106ef60973d6f07c384afbefa30.bindPopup(popup_313b4abd209d7bdd27e40adcb5e587d0)
+        ;
+
+        
+    
+    
+            var marker_9d2de719c3816e0d8cb46badfe6d176d = L.marker(
+                [33.504276, 126.506782],
+                {}
+            ).addTo(map_08db641d94b9629a67faa42e9a513ec9);
+        
+    
+            var icon_854b3d3639a99227ba4305378ac5f589 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_9d2de719c3816e0d8cb46badfe6d176d.setIcon(icon_854b3d3639a99227ba4305378ac5f589);
+        
+    
+        var popup_15f239310fa40737d4025a7533ca51c6 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_c16d3586bc7177a151a4c214987225bf = $(`<div id="html_c16d3586bc7177a151a4c214987225bf" style="width: 100.0%; height: 100.0%;">남동쪽 꼭지점: (33.504276, 126.506782)</div>`)[0];
+                popup_15f239310fa40737d4025a7533ca51c6.setContent(html_c16d3586bc7177a151a4c214987225bf);
+            
+        
+
+        marker_9d2de719c3816e0d8cb46badfe6d176d.bindPopup(popup_15f239310fa40737d4025a7533ca51c6)
+        ;
+
+        
+    
+</script>

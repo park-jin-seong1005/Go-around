@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>챗봇</title>
+</head>
+<body>
+  <h1>챗봇</h1>
+  <form id="chat-form">
+    <input type="text" id="message" autocomplete="off" placeholder="메시지를 입력하세요" />
+    <button type="submit">전송</button>
+  </form>
+
+  <div id="chat-log" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; margin-top: 10px; height: 200px; overflow-y: auto;"></div>
+
+  <script>
+    const chatLog = document.getElementById('chat-log');
+    const form = document.getElementById('chat-form');
+    const messageInput = document.getElementById('message');
+
+    // SSE 연결 시작
+    const evtSource = new EventSource('/stream');
+    evtSource.onmessage = function(e) {
+      if (e.data === '[DONE]') {
+        chatLog.innerHTML += '\n--- 답변 완료 ---\n';
+        return;
+      }
+      if (e.data === '[ERROR]') {
+        chatLog.innerHTML += '\n[에러가 발생했습니다]\n';
+        return;
+      }
+      chatLog.innerHTML += e.data;
+      chatLog.scrollTop = chatLog.scrollHeight;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = messageInput.value.trim();
+      if (!msg) return;
+
+      chatLog.innerHTML += `\n> ${msg}\n`;
+      messageInput.value = '';
+
+      // 챗 요청 보내기 (비동기)
+      await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg }),
+      });
+    });
+  </script>
+</body>
+</html>

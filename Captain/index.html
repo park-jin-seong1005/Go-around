@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Go Around 챗봇</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .app-container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      gap: 20px;
+      height: 85vh;
+    }
+    
+    /* 왼쪽 패널 - 날씨 정보 */
+    .weather-panel {
+      flex: 0 0 350px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .weather-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .weather-header h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .weather-header .location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #666;
+      font-size: 18px;
+    }
+    
+    .current-weather {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .temperature {
+      font-size: 64px;
+      font-weight: 300;
+      color: #333;
+      line-height: 1;
+    }
+    
+    .weather-icon {
+      font-size: 80px;
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+    
+    .weather-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .weather-item {
+      background: rgba(102, 126, 234, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .weather-item i {
+      font-size: 24px;
+      color: #667eea;
+      margin-bottom: 8px;
+    }
+    
+    .weather-item .label {
+      font-size: 12px;
+      color: #666;
+      display: block;
+    }
+    
+    .weather-item .value {
+      font-size: 18px;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    /* 고어라운드 확률 표시 */
+    .go-around-section {
+      margin-top: 25px;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      color: white;
+      text-align: center;
+    }
+    
+    .go-around-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    
+    .go-around-probability {
+      font-size: 48px;
+      font-weight: 300;
+      margin-bottom: 5px;
+    }
+    
+    .go-around-status {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    /* 오른쪽 패널 - 채팅 */
+    .chat-container {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .chat-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .chat-header i {
+      font-size: 28px;
+    }
+    
+    .chat-header h1 {
+      font-size: 22px;
+      font-weight: 500;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 25px;
+      background: #f8f9fa;
+    }
+    
+    .chat-messages::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #bbb;
+      border-radius: 10px;
+    }
+    
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #999;
+    }
+    
+    .message {
+      margin-bottom: 20px;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .message-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .user-message .message-wrapper {
+      flex-direction: row-reverse;
+    }
+    
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    
+    .user-message .message-avatar {
+      background: #667eea;
+      color: white;
+    }
+    
+    .bot-message .message-avatar {
+      background: #f0f0f0;
+      color: #666;
+    }
+    
+    .message-content {
+      max-width: 70%;
+      padding: 12px 18px;
+      border-radius: 18px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.5;
+    }
+    
+    .user-message .message-content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .bot-message .message-content {
+      background: white;
+      color: #333;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    }
+    
+    /* CSV 데이터 스타일 */
+    .message-content pre {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 10px 0;
+      font-size: 13px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .message-content code {
+      background: #f5f5f5;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+    
+    .chat-input-area {
+      padding: 20px;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+    
+    #chatInput {
+      width: 100%;
+      padding: 15px 50px 15px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s;
+    }
+    
+    #chatInput:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .input-actions {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 5px;
+    }
+    
+    .btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn:active {
+      transform: scale(0.95);
+    }
+    
+    .quick-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .quick-btn {
+      padding: 8px 16px;
+      border: 1px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .quick-btn:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .typing-indicator {
+      display: none;
+      padding: 20px;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .typing-indicator.active {
+      display: flex;
+    }
+    
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: #999;
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+    
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    /* 반응형 디자인 */
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .weather-panel {
+        flex: none;
+        margin-bottom: 20px;
+      }
+      
+      .chat-container {
+        height: 600px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 날씨 정보 패널 -->
+    <div class="weather-panel">
+      <div class="weather-header">
+        <h2 id="currentDate">--</h2>
+        <div class="location">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>제주공항</span>
+        </div>
+      </div>
+      
+      <div class="current-weather">
+        <i class="fas fa-sun weather-icon" id="weatherIcon"></i>
+        <div class="temperature" id="currentTemp">--°</div>
+      </div>
+      
+      <div class="weather-details">
+        <div class="weather-item">
+          <i class="fas fa-tint"></i>
+          <span class="label">습도</span>
+          <span class="value" id="humidity">--%</span>
+        </div>
+        <div class="weather-item">
+          <i class="fas fa-wind"></i>
+          <span class="label">풍속</span>
+          <span class="value" id="windSpeed">--m/s</span>
+        </div>
+        <div class="weather-item">
+          <i class="fas fa-compass"></i>
+          <span class="label">풍향</span>
+          <span class="value" id="windDir">--°</span>
+        </div>
+        <div class="weather-item">
+          <i class="fas fa-tachometer-alt"></i>
+          <span class="label">기압</span>
+          <span class="value" id="pressure">--hPa</span>
+        </div>
+      </div>
+      
+      <!-- 고어라운드 확률 섹션 -->
+      <div class="go-around-section">
+        <div class="go-around-title">Go Around 확률</div>
+        <div class="go-around-probability" id="goAroundProbability">--%</div>
+        <div class="go-around-status" id="goAroundStatus">분석 중...</div>
+      </div>
+      
+      <div style="margin-top: 20px; text-align: center; color: #666; font-size: 14px;">
+        <i class="far fa-clock"></i>
+        <span id="updateTime">업데이트: --:--</span>
+      </div>
+    </div>
+    
+    <!-- 채팅 패널 -->
+    <div class="chat-container">
+      <div class="chat-header">
+        <i class="fas fa-cloud-sun"></i>
+        <h1>Go Around 챗봇</h1>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages">
+        <!-- 메시지가 여기 표시됩니다 -->
+      </div>
+      
+      <div class="typing-indicator" id="typingIndicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <span style="margin-left: 10px; color: #666;">챗봇이 답변 중입니다...</span>
+      </div>
+      
+      <div class="chat-input-area">
+        <div style="flex: 1;">
+          <div class="quick-buttons">
+            <button class="quick-btn" onclick="sendQuickMessage('현재 날씨')">현재 날씨</button>
+            <button class="quick-btn" onclick="sendQuickMessage('고어라운드')">고어라운드</button>
+          </div>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="chatInput" 
+              placeholder="날씨에 대해 물어보세요..." 
+              autocomplete="off"
+            />
+            <div class="input-actions">
+              <button class="btn" id="sendBtn" title="전송">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM 요소들
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const typingIndicator = document.getElementById('typingIndicator');
+    
+    // 날씨 정보 요소들
+    const currentDate = document.getElementById('currentDate');
+    const currentTemp = document.getElementById('currentTemp');
+    const humidity = document.getElementById('humidity');
+    const windSpeed = document.getElementById('windSpeed');
+    const windDir = document.getElementById('windDir');
+    const pressure = document.getElementById('pressure');
+    const updateTime = document.getElementById('updateTime');
+    const weatherIcon = document.getElementById('weatherIcon');
+    
+    // 고어라운드 요소들
+    const goAroundProbability = document.getElementById('goAroundProbability');
+    const goAroundStatus = document.getElementById('goAroundStatus');
+    
+    // SSE 연결
+    let eventSource;
+    let currentBotMessage = '';
+    let currentBotElement = null;
+    
+    // 날짜 초기화
+    function initializeDate() {
+      const now = new Date();
+      const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        weekday: 'long'
+      };
+      currentDate.textContent = now.toLocaleDateString('ko-KR', options);
+    }
+    
+    // SSE 초기화
+    function initSSE() {
+      eventSource = new EventSource('/stream');
+      
+      eventSource.onmessage = function(event) {
+        const data = event.data;
+        
+        if (data === '[DONE]') {
+          typingIndicator.classList.remove('active');
+          currentBotMessage = '';
+          currentBotElement = null;
+        } else if (data === '[ERROR]') {
+          if (currentBotElement) {
+            currentBotElement.innerHTML += '<br><br>❌ 오류가 발생했습니다.';
+          } else {
+            addMessage('bot', '❌ 오류가 발생했습니다.');
+          }
+          typingIndicator.classList.remove('active');
+          currentBotMessage = '';
+          currentBotElement = null;
+        } else {
+          typingIndicator.classList.remove('active');
+          
+          if (!currentBotElement) {
+            currentBotElement = addMessage('bot', data, true);
+          } else {
+            currentBotMessage += data;
+            currentBotElement.innerHTML = formatMessage(currentBotMessage);
+          }
+          
+          // 날씨 정보 업데이트
+          updateWeatherInfo(currentBotMessage);
+          
+          // 고어라운드 확률 업데이트
+          updateGoAroundInfo(currentBotMessage);
+          
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+      };
+      
+      eventSource.onerror = function() {
+        console.error('SSE 연결 오류');
+        typingIndicator.classList.remove('active');
+      };
+    }
+    
+    // 메시지 추가
+    function addMessage(sender, content, isStreaming = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}-message`;
+      
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.className = 'message-wrapper';
+      
+      const avatarDiv = document.createElement('div');
+      avatarDiv.className = 'message-avatar';
+      avatarDiv.innerHTML = sender === 'user' ? 
+        '<i class="fas fa-user"></i>' : 
+        '<i class="fas fa-robot"></i>';
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'message-content';
+      contentDiv.innerHTML = formatMessage(content);
+      
+      wrapperDiv.appendChild(avatarDiv);
+      wrapperDiv.appendChild(contentDiv);
+      messageDiv.appendChild(wrapperDiv);
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      if (isStreaming) {
+        currentBotMessage = content;
+        return contentDiv;
+      }
+      
+      return null;
+    }
+    
+    // 메시지 포맷팅
+    function formatMessage(text) {
+      // CSV 코드 블록 처리
+      text = text.replace(/```csv\n([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      text = text.replace(/```\n([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      
+      // 줄바꿈 처리
+      text = text.replace(/\n/g, '<br>');
+      
+      return text;
+    }
+    
+    // 날씨 정보 업데이트
+    function updateWeatherInfo(text) {
+      // 온도 추출
+      const tempMatch = text.match(/기온:\s*([\d.-]+)°C/);
+      if (tempMatch) {
+        currentTemp.textContent = Math.round(parseFloat(tempMatch[1])) + '°';
+        updateWeatherIcon(parseFloat(tempMatch[1]));
+      }
+      
+      // 습도 추출
+      const humidMatch = text.match(/습도:\s*([\d.]+)%/);
+      if (humidMatch) {
+        humidity.textContent = humidMatch[1] + '%';
+      }
+      
+      // 풍속 추출
+      const windSpeedMatch = text.match(/풍속:\s*([\d.]+)m\/s/);
+      if (windSpeedMatch) {
+        windSpeed.textContent = windSpeedMatch[1] + 'm/s';
+      }
+      
+      // 풍향 추출
+      const windDirMatch = text.match(/풍향:\s*([\d.]+)°/);
+      if (windDirMatch) {
+        windDir.textContent = windDirMatch[1] + '°';
+      }
+      
+      // 기압 추출
+      const pressureMatch = text.match(/기압:\s*([\d.]+)hPa/);
+      if (pressureMatch) {
+        pressure.textContent = pressureMatch[1] + 'hPa';
+      }
+      
+      // 업데이트 시간
+      const now = new Date();
+      updateTime.textContent = `업데이트: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    }
+    
+    // 고어라운드 정보 업데이트
+    function updateGoAroundInfo(text) {
+      // 고어라운드 확률 추출
+      const probabilityMatch = text.match(/고어라운드\s*확률[:\s]*([\d.]+)%/i) || 
+                              text.match(/확률[:\s]*([\d.]+)%/i);
+      
+      if (probabilityMatch) {
+        const probability = parseFloat(probabilityMatch[1]);
+        goAroundProbability.textContent = probability.toFixed(1) + '%';
+        
+        // 확률에 따른 상태 메시지
+        if (probability >= 70) {
+          goAroundStatus.textContent = '높음 - 주의 필요';
+          goAroundStatus.style.color = '#ff4757';
+        } else if (probability >= 40) {
+          goAroundStatus.textContent = '보통 - 상황 주시';
+          goAroundStatus.style.color = '#ffa502';
+        } else {
+          goAroundStatus.textContent = '낮음 - 양호';
+          goAroundStatus.style.color = '#2ed573';
+        }
+      }
+    }
+    
+    // 날씨 아이콘 업데이트
+    function updateWeatherIcon(temp) {
+      weatherIcon.className = 'fas weather-icon';
+      if (temp >= 25) {
+        weatherIcon.classList.add('fa-sun');
+        weatherIcon.style.color = '#f39c12';
+      } else if (temp >= 15) {
+        weatherIcon.classList.add('fa-cloud-sun');
+        weatherIcon.style.color = '#3498db';
+      } else {
+        weatherIcon.classList.add('fa-cloud');
+        weatherIcon.style.color = '#7f8c8d';
+      }
+    }
+    
+    // 메시지 전송
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+      
+      addMessage('user', message);
+      chatInput.value = '';
+      typingIndicator.classList.add('active');
+      
+      try {
+        const response = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('서버 응답 오류');
+        }
+      } catch (error) {
+        console.error('전송 오류:', error);
+        addMessage('bot', '⚠️ 메시지 전송에 실패했습니다.');
+        typingIndicator.classList.remove('active');
+      }
+    }
+    
+    // 빠른 메시지 전송
+    function sendQuickMessage(text) {
+      chatInput.value = text;
+      sendMessage();
+    }
+    
+    // 이벤트 리스너
+    sendBtn.addEventListener('click', sendMessage);
+    
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    
+    // 초기화
+    window.addEventListener('load', () => {
+      initializeDate();
+      initSSE();
+      addMessage('bot', '안녕하세요! Go Around 챗봇입니다. 🌤️\n\n날씨에 대해 궁금한 것을 물어보세요!\n\n예시:\n• "현재 날씨 알려줘"\n• "고어라운드"');
+    });
+  </script>
+</body>
+</html>
