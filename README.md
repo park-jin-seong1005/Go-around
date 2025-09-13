@@ -19,6 +19,7 @@ https://github.com/user-attachments/assets/debd8d17-683c-4ab9-84a6-6b1d328abd73
 - **제주공항 1년치 기상 데이터와 항공 데이터**를 분석해 Go-Around(복행) 발생 원인을 규명  
 - 통계적 기법과 AI 모델을 결합해 **Go-Around 발생 확률 예측 시스템** 개발  
 - OLLAMA 기반 챗봇과 연동해 **실시간 기상 데이터 기반 위험 분석** 제공
+<img width="694" height="671" alt="image" src="https://github.com/user-attachments/assets/e21f2ef6-9707-4b7e-8086-0a5d2f1863e5" />
 
 ### 서비스 개발 결과  
 <img width="1044" height="375" alt="image" src="https://github.com/user-attachments/assets/0cbda809-dbb0-4b75-aa4a-ed17f596e6ff" />
